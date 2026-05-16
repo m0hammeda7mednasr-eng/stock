@@ -1,0 +1,10 @@
+{
+  "name": "LoomSystems Enterprise",
+  "description": "Enterprise-grade textile and fashion inventory management system with real-time stock tracking and supply chain logistics.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

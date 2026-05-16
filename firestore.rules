@@ -1,0 +1,91 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Entity Validations ---
+
+    function isValidFabric(data) {
+      return data.name is string && data.unit in ["Kilogram", "Meter", "Ton", "Roll"]
+        && data.quantity is number && data.totalCost is number;
+    }
+
+    function isValidSupplier(data) {
+      return data.name is string && data.email is string;
+    }
+
+    function isValidProduct(data) {
+      return data.name is string && data.sku is string && data.price is number;
+    }
+
+    function isValidProductionOrder(data) {
+      return data.factoryId is string && data.productId is string && data.totalQty is number;
+    }
+
+    // --- Collections ---
+
+    match /fabrics/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /suppliers/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /supplier_purchases/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /products/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /factories/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /factory_allocations/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /production_orders/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /deliveries/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /stores/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /distributions/{id} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /test/{docId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Default Deny (Bottom)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

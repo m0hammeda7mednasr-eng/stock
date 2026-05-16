@@ -1,0 +1,155 @@
+{
+  "entities": {
+    "Fabric": {
+      "title": "Fabric (Raw Material)",
+      "description": "Raw materials purchased from suppliers.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "unit": { "type": "string", "enum": ["Kilogram", "Meter", "Ton", "Roll"] },
+        "quantity": { "type": "number" },
+        "totalCost": { "type": "number" },
+        "unitCost": { "type": "number" },
+        "color": { "type": "string" },
+        "sku": { "type": "string" }
+      },
+      "required": ["name", "unit", "quantity", "totalCost"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Manufacturing partners and material vendors.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "contact": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "location": { "type": "string" }
+      },
+      "required": ["name", "email"]
+    },
+    "SupplierPurchase": {
+      "title": "Supplier Purchase",
+      "description": "Record of fabrics purchased from a supplier.",
+      "type": "object",
+      "properties": {
+        "supplierId": { "type": "string" },
+        "fabricId": { "type": "string" },
+        "quantity": { "type": "number" },
+        "cost": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "paymentStatus": { "type": "string", "enum": ["Paid", "Partial", "Unpaid"] },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["supplierId", "fabricId", "quantity", "cost", "date"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Finished garments items.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "sku": { "type": "string" },
+        "category": { "type": "string" },
+        "material": { "type": "string" },
+        "stockQty": { "type": "number" },
+        "sizes": { "type": "object" },
+        "price": { "type": "number" },
+        "image": { "type": "string" }
+      },
+      "required": ["name", "sku", "price"]
+    },
+    "Factory": {
+      "title": "Factory",
+      "description": "Production facilities.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "contact": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "FactoryAllocation": {
+      "title": "Factory Allocation",
+      "description": "Raw materials allocated to a factory.",
+      "type": "object",
+      "properties": {
+        "factoryId": { "type": "string" },
+        "fabricId": { "type": "string" },
+        "quantity": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["factoryId", "fabricId", "quantity"]
+    },
+    "ProductionOrder": {
+      "title": "Production Order",
+      "description": "Orders placed with factories for production.",
+      "type": "object",
+      "properties": {
+        "factoryId": { "type": "string" },
+        "fabricId": { "type": "string" },
+        "productId": { "type": "string" },
+        "totalQty": { "type": "number" },
+        "receivedQty": { "type": "number" },
+        "expectedSizes": { "type": "object" },
+        "receivedSizes": { "type": "object" },
+        "cost": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "paymentStatus": { "type": "string", "enum": ["Paid", "Partial", "Unpaid"] },
+        "status": { "type": "string", "enum": ["Pending", "In Production", "Completed"] }
+      },
+      "required": ["factoryId", "productId", "totalQty"]
+    },
+    "Delivery": {
+      "title": "Delivery",
+      "description": "Record of stock received from factory.",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string" },
+        "quantityReceived": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" },
+        "notes": { "type": "string" }
+      },
+      "required": ["orderId", "quantityReceived", "date"]
+    },
+    "Store": {
+      "title": "Store",
+      "description": "Retail locations.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "manager": { "type": "string" },
+        "salesTotal": { "type": "number" }
+      },
+      "required": ["name"]
+    },
+    "Distribution": {
+      "title": "Distribution",
+      "description": "Inventory sent to stores.",
+      "type": "object",
+      "properties": {
+        "storeId": { "type": "string" },
+        "productId": { "type": "string" },
+        "quantity": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" },
+        "paymentStatus": { "type": "string", "enum": ["Paid", "Unpaid", "Partial"] }
+      },
+      "required": ["storeId", "productId", "quantity", "totalAmount"]
+    }
+  },
+  "firestore": {
+    "fabrics": { "schema": "Fabric", "description": "Raw material inventory" },
+    "suppliers": { "schema": "Supplier", "description": "Global suppliers" },
+    "supplier_purchases": { "schema": "SupplierPurchase", "description": "Purchases from suppliers" },
+    "products": { "schema": "Product", "description": "Finished product catalog" },
+    "factories": { "schema": "Factory", "description": "Production units" },
+    "factory_allocations": { "schema": "FactoryAllocation", "description": "Raw material movement to factories" },
+    "production_orders": { "schema": "ProductionOrder", "description": "Factory production orders" },
+    "deliveries": { "schema": "Delivery", "description": "Goods receipt history" },
+    "stores": { "schema": "Store", "description": "Retail stores" },
+    "distributions": { "schema": "Distribution", "description": "Stock distributions to stores" }
+  }
+}
